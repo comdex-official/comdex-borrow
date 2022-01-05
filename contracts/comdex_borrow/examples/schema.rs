@@ -1,13 +1,14 @@
 use std::env::current_dir;
 use std::fs::create_dir_all;
 
-use cosmwasm_schema::{export_schema, remove_schemas, schema_for};
+use cosmwasm_schema::{export_schema, remove_schemas};
 
 use cw20::{
     AllAccountsResponse, AllAllowancesResponse, AllowanceResponse, BalanceResponse,
     TokenInfoResponse,
 };
-use cw20_base::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use cw20_legacy::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use schemars::schema_for;
 
 fn main() {
     let mut out_dir = current_dir().unwrap();

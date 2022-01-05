@@ -3,14 +3,14 @@ use cosmwasm_std::entry_point;
 use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response, StdError, StdResult};
 
 use cw2::set_contract_version;
-use cw20_base::{
-    contract::{create_accounts, handle as cw20_execute, query as cw20_query},
-    msg::{HandleMsg, QueryMsg},
-    state::{MinterData, TokenInfo, TOKEN_INFO_KEY},
+use cw20_legacy::{
+    contract::{create_accounts, execute as cw20_execute, query as cw20_query},
+    msg::{ExecuteMsg, QueryMsg},
+    state::{MinterData, TokenInfo, TOKEN_INFO},
     ContractError,
 };
 
-use token_msg::InstantiateMsg;
+use crate::token_msg::InstantiateMsg;
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:cw20-base";

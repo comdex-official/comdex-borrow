@@ -1,3 +1,4 @@
 /contracts/comdex_mint/target/
 /.idea/
 artifacts
+/contracts/comdex_oracle/target/

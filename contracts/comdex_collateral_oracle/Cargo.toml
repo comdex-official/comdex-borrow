@@ -1,5 +1,5 @@
 [package]
-name = "comdex-mint"
+name = "comdex-collateral-oracle"
 version = "0.1.0"
 edition = "2018"
 
@@ -30,16 +30,11 @@ optimize = """docker run --rm -v "$(pwd)":/code \
 """
 
 [dependencies]
-cw0 = "0.8.0"
-cw2 = "0.8.0"
-cw20 = "0.8.0"
-cw20-base = { version = "0.8.0", features = ["library"]}
-cw-storage-plus  = "0.8.0"
+cosmwasm-std = { version = "0.16.0" }
 cosmwasm-storage = "0.16.0"
 cosmwasm-schema = "0.16.0"
-cw20-legacy = { version = "0.2.0", features = ["library"]}
-cosmwasm-std = { version = "0.16.0" }
 schemars = "0.8.1"
 serde = { version = "1.0.103", default-features = false, features = ["derive"] }
 thiserror = { version = "1.0.23" }
-cswap = { version = "0.1.0", path = "../../packages/cswap" , default-features = false}
+cosmwasm-bignumber = "2.2.0"
+cswap = { version = "0.1.0", path = "../../packages/cswap" }

@@ -10,7 +10,7 @@ use cw20_legacy::{
     ContractError,
 };
 
-use crate::token_msg::InstantiateMsg;
+use cswap::token::InstantiateMsg;
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:cw20-base";

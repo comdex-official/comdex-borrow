@@ -4,3 +4,4 @@ artifacts
 /contracts/comdex_oracle/target/
 /contracts/comdex_cswap/target/
 /contracts/comdex_collateral_oracle/target/
+/contracts/comdex_swap_factory/target/

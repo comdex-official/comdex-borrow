@@ -54,7 +54,7 @@ pub fn query_price(
 
             Ok((res.rate, res.last_updated_base))
         }
-        SourceType::Native { native_denom } => {
+        /*SourceType::Native { native_denom } => {
             let rate: Decimal = query_native_rate(
                 &deps.querier,
                 native_denom.clone(),
@@ -62,7 +62,7 @@ pub fn query_price(
             )?;
 
             Ok((rate, u64::MAX))
-        }
+        }*/
     }
 }
 
@@ -87,7 +87,7 @@ fn parse_band_rate(uint_rate: Uint128) -> StdResult<Decimal> {
     Decimal::from_str(rate_uint_string.as_str())
 }
 
-fn query_native_rate(
+/*fn query_native_rate(
     querier: &QuerierWrapper,
     base_denom: String,
     quote_denom: String,
@@ -97,7 +97,7 @@ fn query_native_rate(
         terra_querier.query_exchange_rates(base_denom, vec![quote_denom])?;
 
     Ok(res.exchange_rates[0].exchange_rate)
-}
+}*/
 
 #[cfg(test)]
 mod tests {

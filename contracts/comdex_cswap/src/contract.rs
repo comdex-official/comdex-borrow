@@ -51,7 +51,7 @@ pub fn instantiate(
             admin: None,
             code_id: msg.token_code_id,
             msg: to_binary(&TokenInstantiateMsg {
-                name: "terraswap liquidity token".to_string(),
+                name: "cswap liquidity token".to_string(),
                 symbol: "uLP".to_string(),
                 decimals: 6,
                 initial_balances: vec![],
@@ -78,6 +78,12 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
+        ExecuteMsg::Receive(msg) => receive_cw20(deps, env, info, msg),
+        ExecuteMsg::ProvideLiquidity {
+            assets,
+            slippage_tolerance,
+            receiver,
+        } => provide_liquidity(deps, env, info, assets, slippage_tolerance, receiver),
         ExecuteMsg::Swap {
             offer_asset,
             belief_price,
@@ -105,6 +111,72 @@ pub fn execute(
                 to_addr,
             )
         }
+    }
+}
+
+pub fn receive_cw20(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    cw20_msg: Cw20ReceiveMsg,
+) -> Result<Response, ContractError> {
+    let contract_addr = info.sender.clone();
+
+    match from_binary(&cw20_msg.msg) {
+        Ok(Cw20HookMsg::Swap {
+               belief_price,
+               max_spread,
+               to,
+           }) => {
+            // only asset contract can execute this message
+            let mut authorized: bool = false;
+            let config: PairInfoRaw = PAIR_INFO.load(deps.storage)?;
+            let pools: [Asset; 2] =
+                config.query_pools(&deps.querier, deps.api, env.contract.address.clone())?;
+            for pool in pools.iter() {
+                if let AssetInfo::Token { contract_addr, .. } = &pool.info {
+                    if contract_addr == &info.sender {
+                        authorized = true;
+                    }
+                }
+            }
+
+            if !authorized {
+                return Err(ContractError::Unauthorized {});
+            }
+
+            let to_addr = if let Some(to_addr) = to {
+                Some(deps.api.addr_validate(to_addr.as_str())?)
+            } else {
+                None
+            };
+
+            swap(
+                deps,
+                env,
+                info,
+                Addr::unchecked(cw20_msg.sender),
+                Asset {
+                    info: AssetInfo::Token {
+                        contract_addr: contract_addr.to_string(),
+                    },
+                    amount: cw20_msg.amount,
+                },
+                belief_price,
+                max_spread,
+                to_addr,
+            )
+        }
+        Ok(Cw20HookMsg::WithdrawLiquidity {}) => {
+            let config: PairInfoRaw = PAIR_INFO.load(deps.storage)?;
+            if deps.api.addr_canonicalize(info.sender.as_str())? != config.liquidity_token {
+                return Err(ContractError::Unauthorized {});
+            }
+
+            let sender_addr = deps.api.addr_validate(cw20_msg.sender.as_str())?;
+            withdraw_liquidity(deps, env, info, sender_addr, cw20_msg.amount)
+        }
+        Err(err) => Err(ContractError::Std(err)),
     }
 }
 
@@ -304,6 +376,58 @@ pub fn swap(
         ("spread_amount", &spread_amount.to_string()),
         ("commission_amount", &commission_amount.to_string()),
     ]))
+}
+
+pub fn withdraw_liquidity(
+    deps: DepsMut,
+    env: Env,
+    _info: MessageInfo,
+    sender: Addr,
+    amount: Uint128,
+) -> Result<Response, ContractError> {
+    let pair_info: PairInfoRaw = PAIR_INFO.load(deps.storage)?;
+    let liquidity_addr: Addr = deps.api.addr_humanize(&pair_info.liquidity_token)?;
+
+    let pools: [Asset; 2] = pair_info.query_pools(&deps.querier, deps.api, env.contract.address)?;
+    let total_share: Uint128 = query_supply(&deps.querier, liquidity_addr)?;
+
+    let share_ratio: Decimal = Decimal::from_ratio(amount, total_share);
+    let refund_assets: Vec<Asset> = pools
+        .iter()
+        .map(|a| Asset {
+            info: a.info.clone(),
+            amount: a.amount * share_ratio,
+        })
+        .collect();
+
+    // update pool info
+    Ok(Response::new()
+        .add_messages(vec![
+            refund_assets[0]
+                .clone()
+                .into_msg(&deps.querier, sender.clone())?,
+            refund_assets[1]
+                .clone()
+                .into_msg(&deps.querier, sender.clone())?,
+            // burn liquidity token
+            CosmosMsg::Wasm(WasmMsg::Execute {
+                contract_addr: deps
+                    .api
+                    .addr_humanize(&pair_info.liquidity_token)?
+                    .to_string(),
+                msg: to_binary(&Cw20ExecuteMsg::Burn { amount })?,
+                funds: vec![],
+            }),
+        ])
+        .add_attributes(vec![
+            ("action", "withdraw_liquidity"),
+            ("sender", sender.as_str()),
+            ("withdrawn_share", &amount.to_string()),
+            (
+                "refund_assets",
+                &format!("{}, {}", refund_assets[0], refund_assets[1]),
+            ),
+        ]))
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]

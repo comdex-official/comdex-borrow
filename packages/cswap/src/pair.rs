@@ -17,6 +17,13 @@ pub struct InstantiateMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
+    Receive(Cw20ReceiveMsg),
+    /// ProvideLiquidity a user provides pool liquidity
+    ProvideLiquidity {
+        assets: [Asset; 2],
+        slippage_tolerance: Option<Decimal>,
+        receiver: Option<String>,
+    },
     /// Swap an offer asset to the other
     Swap {
         offer_asset: Asset,
@@ -35,6 +42,7 @@ pub enum Cw20HookMsg {
         max_spread: Option<Decimal>,
         to: Option<String>,
     },
+    WithdrawLiquidity {},
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

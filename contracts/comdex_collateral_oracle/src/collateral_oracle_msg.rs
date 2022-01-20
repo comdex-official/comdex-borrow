@@ -91,16 +91,16 @@ pub struct MigrateMsg {}
 #[serde(rename_all = "snake_case")]
 pub enum SourceType {
     MirrorOracle {},
-    Native {
+    /*Native {
         native_denom: String,
-    },
+    },*/
 }
 
 impl fmt::Display for SourceType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             SourceType::MirrorOracle { .. } => write!(f, "mirror_oracle"),
-            SourceType::Native { .. } => write!(f, "native"),
+            //SourceType::Native { .. } => write!(f, "native"),
         }
     }
 }

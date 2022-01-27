@@ -1,16 +1,16 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response, StdError, StdResult};
+use cw20::Cw20ExecuteMsg;
 
 use cw2::set_contract_version;
-use cw20_legacy::{
+use cw20_base::{
     contract::{create_accounts, execute as cw20_execute, query as cw20_query},
-    msg::{ExecuteMsg, QueryMsg},
+    msg::{QueryMsg},
     state::{MinterData, TokenInfo, TOKEN_INFO},
     ContractError,
 };
-
-use cswap::token::InstantiateMsg;
+use crate::token::InstantiateMsg;
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:cw20-base";
@@ -38,7 +38,7 @@ pub fn instantiate(
 
     let mint = match msg.mint {
         Some(m) => Some(MinterData {
-            minter: deps.api.addr_canonicalize(&m.minter)?,
+            minter: deps.api.addr_humanize(&deps.api.addr_canonicalize(&m.minter).unwrap())?,
             cap: m.cap,
         }),
         None => None,
@@ -62,7 +62,7 @@ pub fn execute(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
-    msg: ExecuteMsg,
+    msg: Cw20ExecuteMsg,
 ) -> Result<Response, ContractError> {
     cw20_execute(deps, env, info, msg)
 }

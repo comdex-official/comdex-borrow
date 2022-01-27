@@ -83,8 +83,11 @@ Set up a service to allow cosmovisor to run in the background as well as restart
 
     sudo -S systemctl daemon-reload
     sudo -S systemctl enable cosmovisor
+
+. stop the comdex chain and start using cosmovisor
+
+    sudo -S systemctl stop comdex
     sudo systemctl start cosmovisor
-    sudo systemctl stop cosmovisor
 
 . Check it is running using:
 
@@ -94,6 +97,10 @@ Set up a service to allow cosmovisor to run in the background as well as restart
 
     journalctl -u cosmovisor -f
 
+. To stop cosmovisor using:
+
+    sudo systemctl stop cosmovisor
+
 == Update Cosmovisor to V0.1.0
 
     mkdir -p ~/.comdex/cosmovisor/upgrades/v0.1.0/bin
@@ -101,7 +108,8 @@ Set up a service to allow cosmovisor to run in the background as well as restart
     git pull
     git checkout wasm/comdex_wasmintegeration
     make install
-    make build
-    cp $GOPATH/bin/comdex ~/.comdex/cosmovisor/upgrades/v0.1.0/bin
+    make all
 
+.   check the upgraded comdex version
 
+    cp $GOPATH/bin/comdex ~/.comdex/cosmovisor/upgrades/v0.2.0/bin

@@ -12,7 +12,6 @@ mod test {
     use cosmwasm_std::{Api, StdResult, Storage};
     use cosmwasm_storage::{singleton, singleton_read};
     use cswap::asset::AssetInfoRaw;
-    use terraswap::asset::AssetInfoRaw;
     const KEY_PAIR_INFO: &[u8] = b"pair_info";
 
     pub fn store_pair_info(storage: &mut dyn Storage, config: &PairInfoRaw) -> StdResult<()> {

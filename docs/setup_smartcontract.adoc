@@ -2,38 +2,32 @@
 
 == Setup Smart Contract
 
-1. install rust using below command
+. install rust using below command
 
 .. curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 .. rustup default stable
 .. rustup target add wasm32-unknown-unknown
 
-2. install cargo-generate require for bootstrapping new Cosmwasm smart contract
+. install cargo-generate require for bootstrapping new Cosmwasm smart contract
 
 .. cargo install cargo-generate --features vendored-openssl
 
-3. install cargo-run-script to optimize the smart contract
+. install cargo-run-script to optimize the smart contract
 
 .. cargo install cargo-run-script
 
-4. To write the small smart contract, can follow below terra docs
-
-    https://docs.terra.money/Tutorials/Smart-contracts/Write-smart-contract.html#start-with-a-template
-
-    Note:: This terra docs smart contract is in old version, update the version of cosmwasm libraries in rust.toml file
-
-5. To compile the smart contract, run the below command inside the smart contract directory
+. To compile the smart contract, run the below command inside the smart contract directory
 
     cargo wasm
 
-6. Before deploying the smart contract, optimize the smart contract using below command
+. Before deploying the smart contract, optimize the smart contract using below command
 
     docker run --rm -v "$(pwd)":/code \
   --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
   --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
   cosmwasm/rust-optimizer:0.12.4
 
-7. verify the .wasm file created in the artifacts directory.
+. verify the .wasm file created in the artifacts directory.
 
 == Deploy and Running Smart Contract on Comdex Chain
 

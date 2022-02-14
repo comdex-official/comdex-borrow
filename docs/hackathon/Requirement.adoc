@@ -1,0 +1,36 @@
+==  Web3 Application Hackathon on Cosmos SDK Using Smart Contracts
+
+== Tech stack required for the hackathon
+
+.   you can use any UI framework preferably (react,typescript)
+.   For Backend development, require to create the smart contracts
+    using Cosmwasm on Rust. Go through the Cosmwasm docs using below url -
+    https://docs.cosmwasm.com/docs/1.0/
+.   Cosmwasm has some in-built contracts which can be used to
+    mint Token, Create NFT's. Go through the below url -
+https://github.com/CosmWasm/cw-plus
+
+.   For UI, CosmWasm has some sample dApps
+    to integerate with the chain running smart contracts.
+https://github.com/CosmWasm/dApps
+
+== Environment Setup
+
+.   Download Docker and setup the comdex chain using below commands
+    or can setup the comdex chain on AWS instance.
+
+.   Download rust
+
+.   you can use any UI framework preferably (react,typescript)
+
+. To setup Smart Contract on a chain, follow Smart Contract Doc setup
+
+== Evaluation parameter
+
+.   Significance of problem statement
+.   Novelty of the solution
+.   Potential Impact of solution
+.   Quality of presentation (diagrams/explanation)
+.   Prototype phase (results will be the sum of the score of ideation and prototype phase):
+.   Implementation
+.   Technology

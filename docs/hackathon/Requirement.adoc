@@ -2,16 +2,21 @@
 
 == Tech stack required for the hackathon
 
-.   you can use any UI framework preferably (react,typescript)
-.   For Backend development, require to create the smart contracts
-    using Cosmwasm on Rust. Go through the Cosmwasm docs using below url -
-    https://docs.cosmwasm.com/docs/1.0/
-.   Cosmwasm has some in-built contracts which can be used to
-    mint Token, Create NFT's. Go through the below url -
+.   UI framework - Any language  (prefer - react,typescript)
+.   Backend  - Rust(To Create Smart Contracts using CosmWasm)
+.   Docker or linux command knowledge
+.   GIT commands understanding
+
+== Resources
+
+. Go through the Cosmwasm docs using below url -
+https://docs.cosmwasm.com/docs/1.0/
+. Cosmwasm has some in-built contracts which can be used to
+mint Token, Create NFT's. Go through the below url -
 https://github.com/CosmWasm/cw-plus
 
-.   For UI, CosmWasm has some sample dApps
-    to integerate with the chain running smart contracts.
+.   For UI Integeration to smart contracts, CosmWasm has some sample dApps
+to integerate with the chain running smart contracts.
 https://github.com/CosmWasm/dApps
 
 == Environment Setup
